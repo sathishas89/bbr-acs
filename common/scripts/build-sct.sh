@@ -113,8 +113,10 @@ do_build()
     #export HOST_ARCH = `uname -m`
     #MACHINE=`uname -m`
     #Build base tools
-    source $TOP_DIR/$UEFI_PATH/edksetup.sh
-    make -C $TOP_DIR/$UEFI_PATH/BaseTools
+    pushd $TOP_DIR/$UEFI_PATH
+    source edksetup.sh
+    make -C BaseTools
+    popd
     #Copy over extra files needed for SBBR tests
 
     cp -r $SBBR_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
@@ -217,8 +219,12 @@ do_build()
 do_clean()
 {
     pushd $TOP_DIR/$SCT_PATH/uefi-sct
-    source $TOP_DIR/$UEFI_PATH/edksetup.sh
-    make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
+
+    pushd $TOP_DIR/$UEFI_PATH
+    source edksetup.sh
+    make -C BaseTools clean
+    popd
+
     rm -rf Build
     rm -rf ${TARGET_ARCH}_SCT
 
