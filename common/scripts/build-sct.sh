@@ -123,6 +123,9 @@ do_build()
     #Copy over extra files needed for SBBR tests
     cp -r $SBBR_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
     cp -r $SBBR_TEST_DIR/SbbrEfiSpecVerLvl $SBBR_TEST_DIR/SbbrRequiredUefiProtocols $SBBR_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
+    cp -r $SBBR_TEST_DIR/SbbrEfiFgtFeaturesTest uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
+    cp -r $BBR_DIR/ebbr/sct-tests/EbbrProfileTableTest \
+            uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
     cp $SBBR_TEST_DIR/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
     cp $SBBR_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
 

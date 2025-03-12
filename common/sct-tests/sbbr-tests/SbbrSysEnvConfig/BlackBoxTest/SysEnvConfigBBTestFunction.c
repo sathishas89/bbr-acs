@@ -40,7 +40,7 @@
   matters included within this Test Suite, to which United
   EFI, Inc. makes no claim of right.
 
-  Copyright (c) 2006, ARM. All rights reserved.<BR>
+  Copyright (c) 2006 - 2025 ARM. All rights reserved.<BR>
 
 --*/
 /*++
@@ -65,6 +65,7 @@ Abstract:
 #include <UEFI/Protocol/Ebc.h>
 #include <Uefi/UefiGpt.h>
 #include <Uefi/UefiMultiPhase.h>
+#include "AArch64/PeSysReg.h"
 
 /**
  *  Entrypoint for Boot Exception Level Test.
@@ -92,6 +93,7 @@ BBTestBootExcLevelTest (
   EFI_STATUS                            Status;
   EFI_TEST_ASSERTION                    AssertionType;
   UINTN                                 CurrentEL;
+  UINTN                                 PfrRegData;
 
   //
   // Get the Standard Library Interface
@@ -110,28 +112,33 @@ BBTestBootExcLevelTest (
   //
   CurrentEL = ArmReadCurrentEL();
 
-  switch(CurrentEL){
-    case AARCH64_EL1:
-      AssertionType = EFI_TEST_ASSERTION_PASSED;
-      break;
-    case AARCH64_EL2:
-      AssertionType = EFI_TEST_ASSERTION_PASSED;
-      break;
-    case AARCH64_EL3:
-      AssertionType = EFI_TEST_ASSERTION_FAILED;
-      break;
-    default:
-      StandardLib->RecordAssertion (
-                  StandardLib,
-                  EFI_TEST_ASSERTION_FAILED,
-                  gTestGenericFailureGuid,
-                  L"Unrecognized CurrentEL Value",
-                  L"%a:%d:CurrentEL=0x%X",
-                  __FILE__,
-                  (UINTN)__LINE__,
-                  CurrentEL
-                  );
-      return EFI_UNSUPPORTED;
+  //
+  // Reading PFR0EL1 register to check AARCH64 state
+  //
+  PfrRegData = AA64ReadPfr0El1();
+
+  /*ID_AA64PFR0_EL1 bits 5:4-EL1 AARCH64 and 9:8-EL2 AARCH64 must not be zero */
+  /*CurrentEL bits 0:1 must contain current exception level*/
+  if ((CurrentEL == AARCH64_EL1) && (PfrRegData & 0x30) && !(PfrRegData & 0x300)) {
+    AssertionType = EFI_TEST_ASSERTION_PASSED;
+  }
+  else if ((CurrentEL == AARCH64_EL2) && (PfrRegData & 0x300)) {
+    AssertionType = EFI_TEST_ASSERTION_PASSED;
+  }
+  else {
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+    StandardLib->RecordAssertion (
+                StandardLib,
+                EFI_TEST_ASSERTION_FAILED,
+                gTestGenericFailureGuid,
+                L"Unrecognized CurrentEL Value",
+                L"%a:%d:CurrentEL=0x%X:PfrRegData=0x%X",
+                __FILE__,
+                (UINTN)__LINE__,
+                CurrentEL,
+                PfrRegData
+                );
+    return EFI_UNSUPPORTED;
   }
 
   StandardLib->RecordAssertion (
@@ -139,10 +146,11 @@ BBTestBootExcLevelTest (
               AssertionType,
               gSysEnvConfigAssertion001Guid,
               L"TestBootExcLevel",
-              L"%a:%d:CurrentEL=0x%X",
+              L"%a:%d:CurrentEL=0x%X:PfrRegData=0x%X",
               __FILE__,
               __LINE__,
-              CurrentEL
+              CurrentEL,
+              PfrRegData
               );
 
   return EFI_SUCCESS;

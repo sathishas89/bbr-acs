@@ -1,8 +1,8 @@
 diff --git a/uefi-sct/SctPkg/CommonGenFramework.sh b/uefi-sct/SctPkg/CommonGenFramework.sh
-index 089faac7..e319d4cd 100755
+index 089faac7..937c81c1 100755
 --- a/uefi-sct/SctPkg/CommonGenFramework.sh
 +++ b/uefi-sct/SctPkg/CommonGenFramework.sh
-@@ -344,4 +344,194 @@ then
+@@ -344,4 +344,200 @@ then
    CopyDependency Ebc
    CopyDependency PxeBaseCode
  fi
@@ -29,7 +29,7 @@ index 089faac7..e319d4cd 100755
 +    cp ../../../SctPkg/Config/Data/SCRT.conf                   $Framework/SCRT  > NUL
 +
 +    cp $ProcessorType/EfiCompliantBBTest.efi                   $Framework/Test/ > NUL
- 
++
 +  # Only include ExeModeBBTest.efi if the file exists
 +  if [ -e $ProcessorType/ExeModeBBTest.efi ]; then
 +    cp $ProcessorType/ExeModeBBTest.efi                      $Framework/Test/ > NUL
@@ -152,6 +152,12 @@ index 089faac7..e319d4cd 100755
 +    # Tests SBBR Appendix C
 +    cp $ProcessorType/RequiredUefiProtocolsBBTest.efi          $Framework/Test/ > NUL
 +
++    # UEFI Required FGT Features Tests
++    cp $ProcessorType/SbbrEfiFgtFeaturesTest.efi                $Framework/Test/ > NUL
++
++    # UEFI Boot Services - EBBR v2.4.2.1
++    cp $ProcessorType/EbbrProfileTableTest.efi                  $Framework/Test/ > NUL
++
 +    # *********************************************
 +    # Copy ENTS binary
 +    # *********************************************
@@ -164,7 +170,7 @@ index 089faac7..e319d4cd 100755
 +    cp $ProcessorType/BootService_ENTSTest.efi         $Framework/Ents/Test/    > NUL
 +    cp $ProcessorType/RuntimeService_ENTSTest.efi      $Framework/Ents/Test/    > NUL
 +    cp $ProcessorType/GenericService_ENTSTest.efi      $Framework/Ents/Test/    > NUL
-+
+ 
 +    cp $ProcessorType/SimpleNetwork_ENTSTest.efi       $Framework/Ents/Test/    > NUL
 +    cp $ProcessorType/PXEBaseCode_ENTSTest.efi         $Framework/Ents/Test/    > NUL
 +    cp $ProcessorType/Mnp*_ENTSTest.efi                $Framework/Ents/Test/    > NUL
@@ -197,9 +203,8 @@ index 089faac7..e319d4cd 100755
 +    CopyDependency PxeBaseCode
 +    CopyDependency ConfigKeywordHandler
 +fi
-\ No newline at end of file
 diff --git a/uefi-sct/SctPkg/Config/Data/Category.ini b/uefi-sct/SctPkg/Config/Data/Category.ini
-index 16f9d637..1e88a593 100644
+index 16f9d637..a5e84961 100644
 --- a/uefi-sct/SctPkg/Config/Data/Category.ini
 +++ b/uefi-sct/SctPkg/Config/Data/Category.ini
 @@ -88,6 +88,27 @@ InterfaceGuid = 71652D04-BF38-434A-BCB8-6547D7FD8384
@@ -277,6 +282,24 @@ index 16f9d637..1e88a593 100644
  
  [Category Data]
  Revision      = 0x00010000
+@@ -1046,3 +1081,17 @@ CategoryGuid  = 607f766c-7455-42be-930b-e4d76db2720f
+ InterfaceGuid = 607f766c-7455-42be-930b-e4d76db2720f
+ Name          = TCG2ProtocolTest
+ Description   = TCG2 Protocol Test
++
++[Category Data]
++Revision      = 0x00010000
++CategoryGuid  = 5D6AF07A-5906-45B0-9CAF-03D5E0240921
++InterfaceGuid = 71652D04-BF38-434A-BCB8-6547D7FD8384
++Name          = GenericTest\SbbrEfiFgtFeaturesTest
++Description   = SBBR EFI FGT features Test
++
++[Category Data]
++Revision      = 0x00010000
++CategoryGuid  = 14BC21EC-6D04-4684-A892-1B465ACAC423
++InterfaceGuid = E9EF7553-F833-4E56-96E8-38AE679523CC
++Name          = BootServicesTest\EbbrProfileTableTest
++Description   = Ebbr Profile Table Test
 diff --git a/uefi-sct/SctPkg/Library/SctGuidLib/SctGuidLib.inf b/uefi-sct/SctPkg/Library/SctGuidLib/SctGuidLib.inf
 index 8f918b26..2bbd22c6 100644
 --- a/uefi-sct/SctPkg/Library/SctGuidLib/SctGuidLib.inf

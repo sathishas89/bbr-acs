@@ -40,7 +40,7 @@
 # matters included within this Test Suite, to which United
 # EFI, Inc. makes no claim of right.
 #
-# Copyright (c) 2016, ARM. All rights reserved.<BR>
+# Copyright (c) 2016 - 2025 ARM. All rights reserved.<BR>
 #
 #
 #/*++
@@ -62,6 +62,10 @@
   MODULE_TYPE          = UEFI_DRIVER
   VERSION_STRING       = 1.0
   ENTRY_POINT          = InitializeBBTestSysEnvConfig
+
+[Sources.AARCH64]
+  AArch64/PeSysReg.S
+  AArch64/PeSysReg.h
 
 [Sources.common]
   Guid.c

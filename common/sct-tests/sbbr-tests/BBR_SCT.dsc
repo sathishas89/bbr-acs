@@ -576,6 +576,12 @@ SctPkg/TestCase/UEFI/EFI/BootServices/SbbrBootServices/BlackBoxTest/SbbrBootServ
 #
 SctPkg/TestCase/UEFI/EFI/Generic/SbbrRequiredUefiProtocols/BlackBoxTest/RequiredUefiProtocolsBBTest.inf
 #SctPkg/TestCase/UEFI/EFI/Generic/EfiCompliant/BlackBoxTest/EfiCompliantBBTest_uefi.inf
+
+# UEFI Required FGT Features Tests
+SctPkg/TestCase/UEFI/EFI/Generic/SbbrEfiFgtFeaturesTest/BlackBoxTest/SbbrEfiFgtFeaturesTest.inf
+# UEFI Boot Services - EBBR v2.4.2.1
+SctPkg/TestCase/UEFI/EFI/BootServices/EbbrProfileTableTest/BlackBoxTest/EbbrProfileTableTest.inf
+
 ##
 ## Dependency files for UEFI/EFI Compliant Test
 ##
