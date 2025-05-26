@@ -356,7 +356,7 @@ Refer to [UEFI SCT Test Case Specification](https://uefi-sct-testcasespec.readth
 <td rowspan=1 colspan=1>✅ QueryCapsuleCapabilities_Func</td>
 </tr>
 <tr>
-<td rowspan=1 colspan=1>❌ ResetSystem_Func</td>
+<td rowspan=1 colspan=1>✅ ResetSystem_Func</td>
 </tr>
 <tr>
 <td rowspan=1 colspan=1>✅ UpdateCapsule_Conf</td>
