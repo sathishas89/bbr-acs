@@ -21,6 +21,8 @@ For more information, see the [BBSR specification](https://developer.arm.com/doc
 The BBR ACS test suites check for compliance against the SBBR, EBBR and BBSR specifications. These tests are also delivered through two runtime executable environments:
   - UEFI Self Certification Tests (SCT)
   - Firmware Test Suite (FWTS)
+UEFI-SCT and FWTS are leveraged, customized and automate to run within the Arm SystemReady ACS.
+These suites, within the Arm compliancetest ecosystem is known as the BBR-ACS.
 
 ## Release details
 
@@ -46,7 +48,16 @@ The BBR ACS test suites check for compliance against the SBBR, EBBR and BBSR spe
   Mapping of BBR ACS tags with SystemReady Release version are captured [here](#bbr-acs-tag-mapping-to-systemready-acs-releases)
 
 ## UEFI Self Certification Tests
-UEFI SCT tests the UEFI implementation requirements defined by SBBR/EBBR recipes in the BBR specifcations and also the rules in BBSR Specifications.
+- UEFI SCT tests the UEFI implementation requirements defined by SBBR/EBBR recipes in the BBR specifcations and also the rules in BBSR Specifications. 
+- UEFI SCT is customized with additional tests which perform Arm specific checks and assertions, and this suite is run with specific sequence files. 
+- A sequnce file is a configuration to the UEFI SCT and represents the selection ot tests tobe run in the SCT. 
+
+	| **Sequence file** | **Link** | **Documentation** | 
+	| --- | --- | --- | 
+	| SBBR.seq | https://github.com/ARM-software/bbr-acs/blob/main/sbbr/config/SBBR.seq | https://github.com/ARM-software/bbr-acs/blob/main/docs/SBBR_recipe_testlist.md | 
+	| EBBR.seq | https://github.com/ARM-software/bbr-acs/blob/main/ebbr/config/EBBR.seq | https://github.com/ARM-software/bbr-acs/blob/main/docs/EBBR_recipe_testlist.md | 
+	| BBSR.seq | https://github.com/ARM-software/bbr-acs/blob/main/bbsr/config/BBSR.seq | https://github.com/ARM-software/bbr-acs/blob/main/docs/BBSR_recipe_testlist.md | 
+
 
 **Prerequisite**: Ensure that the system time is correct before starting SCT tests.
 
@@ -99,7 +110,7 @@ This is done by passing the related sequence file following the `-s` command-lin
  `FS(X):\path\to\SCT>SCT -a -v`
  - To continue the tests
  `FS(X):\path\to\SCT>SCT -c`
- 
+
 You can also select and run tests individually. For more information on running the tests, see the [SCT User Guide](https://github.com/tianocore/edk2-test/blob/master/uefi-sct/Doc/UserGuide/UEFI_SCT_II_UserGuide_2_6_A.pdf).
 
 #### Note:
@@ -128,6 +139,51 @@ To run the tests, follow these steps.
    
 	- `FS(X):\path\to\SCT>SCT -s <EBBR_extd_run.seq/SBBR_extd_run.seq>`
 
+### Running Standalone SCT with Provided Scripts
+This repository also includes Standalone SCT and sample startup.nsh scripts that simplify running the SCT suite for both SBBR and EBBR platforms.
+- Script locations:
+	- common/scripts/StandaloneSctStartup.nsh
+ 	- common/scripts/SampleStartup.nsh
+- Setup Instructions
+	- On the target device, create a directory named SCT. 
+ 	- Copy the SCT binaries from:
+  		- bbr-acs/<ebbr/sbbr>/scripts/edk2-test/uefi-sct/<ARCH>_SCT #(i.e. AARCH64_SCT)
+	- Copy the following scripts to the target device:
+- Copy the following scripts to the target device:
+	- StandaloneSctStartup.nsh
+ 	- SampleStartup.nsh (reference script; partners can integrate its contents into their own startup.nsh)
+	- Expected Directory Layout on Target
+	```text
+	├── SCT
+	│   ├── Application
+	│   ├── Data
+	│   ├── Dependency
+	│   │   ├── ConfigKeywordHandlerBBTest
+	│   │   ├── DecompressBBTest
+	│   │   ├── DeviceIoBBTest
+	│   │   ├── EbcBBTest
+	│   │   ├── EfiCompliantBBTest
+	│   │   ├── ImageServicesBBTest 
+	│   │   ├── LoadedImageBBTest
+	│   │   ├── PciIoBBTest
+	│   │   ├── PciRootBridgeIoBBTest
+	│   │   ├── ProtocolHandlerServicesBBTest
+	│   │   └── PxeBaseCodeBBTest
+	│   ├── Ents
+	│   │   ├── Support
+	│   │   └── Test
+	│   ├── Proxy
+	│   ├── Report
+	│   ├── SCRT
+	│   ├── SCT.efi
+	│   ├── Sequence
+	│   ├── StallForKey.efi
+	│   ├── Support
+	│   └── Test
+	├── StandaloneSctStartup.nsh
+	└── startup.nsh
+	```
+ - After rebooting the target, startup.nsh automatically invokes StandaloneSctStartup.nsh, which runs the SCT test suite and saves the results in the sct_results folder at the root directory. The final report can be found in the SCT Summary.log file.
 
 ## Firmware Test Suite
 FWTS is a package hosted by Canonical. FWTS provides tests for ACPI, SMBIOS and UEFI.
@@ -163,7 +219,22 @@ The FWTS binaries and dependencies can be found here
 
 6.  Run full FWTS tests
     -	`~/fwts_workspace/bin/fwts`
+      
+7. FWTS command for SBBR/EBBR/BBSR  
+	Use the following FWTS commands to run the appropriate set of suites for each specification:
 
+	- **SBBR**  
+	  ```bash
+	  ~/fwts_workspace/bin/fwts -r stdout -q --uefi-set-var-multiple=1 \
+	    --uefi-get-mn-count-multiple=1 --sbbr esrt uefibootpath aest cedt slit \
+	    srat hmat pcct pdtt bgrt bert einj erst hest sdei nfit iort mpam ibft ras2
+	- **EBBR**	
+		```bash
+		~/fwts_workspace/bin/fwts --ebbr
+	- **BBSR**
+		```bash
+  		~/fwts_workspace/bin/fwts uefirtauthvar tpm2
+   	   
 ### Notes
 - By default, build-standalone-fwts.sh script builds the latest FWTS version supprted by ARM SystemReady, as defined in the upstream configuration.
 
@@ -203,3 +274,4 @@ Arm BBR ACS is distributed under Apache v2.0 License.
 --------------
 
 *Copyright (c) 2021-2025, Arm Limited and Contributors. All rights reserved.*
+
