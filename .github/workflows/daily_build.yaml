@@ -109,6 +109,8 @@ jobs:
           cp -r buildroot/output/target/usr/lib64/fwts/* fwts/lib64
           cp -r buildroot/output/target/usr/lib/fwts/* fwts/lib
           cp -r buildroot/output/target/usr/share/fwts/* fwts/share   
+          mkdir -p fwts/modules
+          cp -r buildroot/output/build/fwts-25.09.00/smccc_test/smccc_test.ko fwts/modules 
           cd -
         fi
     - name: Save FWTS.zip as an artifact

@@ -349,6 +349,7 @@ After the build completes, FWTS binaries and dependencies will be located at:
 - `fwts_workspace/buildroot/output/target/usr/lib64/fwts/`
 - `fwts_workspace/buildroot/output/target/usr/lib/fwts/`
 - `fwts_workspace/buildroot/output/target/usr/share/fwts/`
+- `fwts_workspace/buildroot/output/build/fwts-25.09.00/smccc_test/smccc_test.ko`
 
 ---
 
@@ -361,15 +362,29 @@ Follow these steps to execute FWTS tests on the target system.
    ```bash
    mkdir -p ~/fwts_workspace/bin
    mkdir -p ~/fwts_workspace/lib
+   mkdir -p ~/fwts_workspace/modules
    ```
 3. **Copy FWTS binary and dependencies to the workspace:**
    - Copy the `fwts` binary to `~/fwts_workspace/bin`.
    - Copy all required shared libraries (e.g., `libfwts.so`, etc.) to `~/fwts_workspace/lib`.
+   - Copy the `smccc_test.ko` module to  `~/fwts_workspace/modules`.
+
 4. **Set library path:**
    ```bash
    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/fwts_workspace/lib
    ```
-5. **Run full FWTS tests:**
+5. **Load the SMCCC test module on the target system:**
+   ```bash
+   cd ~/fwts_workspace/modules
+   sudo insmod smccc_test.ko
+   ```
+   **Note:**
+   Verify it is loaded:
+   ```bash
+   lsmod | grep smccc
+   dmesg | tail
+   ```
+6. **Run full FWTS tests:**
    ```bash
    ~/fwts_workspace/bin/fwts
    ```
