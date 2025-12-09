@@ -87,6 +87,7 @@ echo "Build type: $BUILD_TYPE"
 
 SBBR_TEST_DIR=$BBR_DIR/common/sct-tests/sbbr-tests
 BBSR_TEST_DIR=$BBR_DIR/bbsr/sct-tests
+EBBR_TEST_DIR=$BBR_DIR/ebbr/sct-tests
 
 if [[ $BUILD_TYPE = S ]]; then
     ## These tests are hosted locally in BBSR folder
@@ -125,6 +126,13 @@ do_build()
     cp -r $SBBR_TEST_DIR/SbbrEfiSpecVerLvl $SBBR_TEST_DIR/SbbrRequiredUefiProtocols $SBBR_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
     cp $SBBR_TEST_DIR/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
     cp $SBBR_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
+
+    #Copy over extra files needed for EBBR tests
+    if [ $BUILD_PLAT = EBBR ]; then
+        cp -r $EBBR_TEST_DIR/EfiConformanceProfileTableTest uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
+    else
+        sed -i 's|SctPkg/TestCase/UEFI/EFI/Generic/EfiConformanceProfileTableTest/BlackBoxTest/EfiConformanceProfileTableTest.inf|#SctPkg/TestCase/UEFI/EFI/Generic/EfiConformanceProfileTableTest/BlackBoxTest/EfiConformanceProfileTableTest.inf|g' $BBR_DIR/common/sct-tests/sbbr-tests/BBR_SCT.dsc
+    fi
 
     # copy BBSR SCT tests to edk2-test
     if [[ $BUILD_TYPE != S ]]; then
