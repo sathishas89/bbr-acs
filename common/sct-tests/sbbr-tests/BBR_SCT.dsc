@@ -555,6 +555,11 @@ SctPkg/TestCase/UEFI/EFI/Generic/SbbrEfiSpecVerLvl/BlackBoxTest/EfiSpecVerLvlBBT
 ## 3.4.4 Configuration Tables
 SctPkg/TestCase/UEFI/EFI/BootServices/SbbrBootServices/BlackBoxTest/SbbrBootServicesBBTest.inf
 # End of UEFI Boot Services - SBBR v1.0 3.4
+#
+# UEFI Generic Services - EBBR v2.4.2.1
+#
+SctPkg/TestCase/UEFI/EFI/Generic/EfiConformanceProfileTableTest/BlackBoxTest/EfiConformanceProfileTableTest.inf
+#End of  UEFI Generic Services - EBBR v2.4.2.1
 
 #
 # Required UEFI Runtime Services Tests - SBBR v1.0 Appendix B
