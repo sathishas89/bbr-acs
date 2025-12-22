@@ -560,7 +560,11 @@ SctPkg/TestCase/UEFI/EFI/BootServices/SbbrBootServices/BlackBoxTest/SbbrBootServ
 #
 SctPkg/TestCase/UEFI/EFI/Generic/EfiConformanceProfileTableTest/BlackBoxTest/EfiConformanceProfileTableTest.inf
 #End of  UEFI Generic Services - EBBR v2.4.2.1
-
+#
+# UEFI Generic Services - EBBR v2.2.3
+#
+SctPkg/TestCase/UEFI/EFI/RuntimeServices/CapsuleOnDiskVariableTest/BlackBoxTest/CapsuleOnDiskVariableTest.inf
+#End of  UEFI Generic Services - EBBR v2.2.3
 #
 # Required UEFI Runtime Services Tests - SBBR v1.0 Appendix B
 #

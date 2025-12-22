@@ -1,0 +1,60 @@
+## @file
+#
+#  Copyright 2006 - 2016 Unified EFI, Inc.<BR>
+#  Copyright (c) 2025, Arm Inc. All rights reserved.<BR>
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+# 
+##
+#/*++
+#
+# Module Name:
+#
+#   CapsuleOnDiskVariableTest.inf
+#
+# Abstract:
+#
+#   Component description file for Capsule Update "On Disk" Black-Box Test.
+#
+#--*/
+
+[Defines]
+  INF_VERSION          = 0x00010005
+  BASE_NAME            = CapsuleOnDiskVariableTest
+  FILE_GUID            = 03624880-f77b-49af-9a4e-3598632be300
+  MODULE_TYPE          = UEFI_DRIVER
+  VERSION_STRING       = 1.0
+  ENTRY_POINT          = InitializeCapsuleOnDiskVariableBbTest
+
+[Sources.common]
+  CapsuleOnDiskVariableTestMain.h
+  CapsuleOnDiskVariableTestMain.c
+  CapsuleOnDiskVariableTestFunction.c
+  Guid.h
+  Guid.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  SctPkg/SctPkg.dec
+  SctPkg/UEFI/UEFI.dec
+
+[LibraryClasses]
+  UefiDriverEntryPoint
+  SctLib
+  EfiTestLib
+  UefiLib
+  UefiRuntimeServicesTableLib
+
+[Protocols]
+  gEfiTestRecoveryLibraryGuid
+  gEfiTestLoggingLibraryGuid
+
+[Guids]
+  gEfiCapsuleReportGuid

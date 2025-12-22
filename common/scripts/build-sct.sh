@@ -130,8 +130,10 @@ do_build()
     #Copy over extra files needed for EBBR tests
     if [ $BUILD_PLAT = EBBR ]; then
         cp -r $EBBR_TEST_DIR/EfiConformanceProfileTableTest uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
+        cp -r $EBBR_TEST_DIR/CapsuleOnDiskVariableTest uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
     else
         sed -i 's|SctPkg/TestCase/UEFI/EFI/Generic/EfiConformanceProfileTableTest/BlackBoxTest/EfiConformanceProfileTableTest.inf|#SctPkg/TestCase/UEFI/EFI/Generic/EfiConformanceProfileTableTest/BlackBoxTest/EfiConformanceProfileTableTest.inf|g' $BBR_DIR/common/sct-tests/sbbr-tests/BBR_SCT.dsc
+        sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/CapsuleOnDiskVariableTest/BlackBoxTest/CapsuleOnDiskVariableTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/CapsuleOnDiskVariableTest/BlackBoxTest/CapsuleOnDiskVariableTest.inf|g' $BBR_DIR/common/sct-tests/sbbr-tests/BBR_SCT.dsc
     fi
 
     # copy BBSR SCT tests to edk2-test
