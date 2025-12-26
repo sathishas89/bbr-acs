@@ -210,6 +210,14 @@ do_build()
            echo  "Error while applying Disable EFI RT Properties Table patch..."
            exit
         fi
+
+        if git apply --check $BBR_DIR/sbbr/patches/0001-UpdateCapsule-Conformance-Test-treat-EFI_UNSUPPORTED-as-Warning.patch; then
+            echo "Applying Update Capsule Conformance Test patch to treat EFI_UNSUPPORTED as Warning..."
+            git apply --ignore-whitespace --ignore-space-change $BBR_DIR/sbbr/patches/0001-UpdateCapsule-Conformance-Test-treat-EFI_UNSUPPORTED-as-Warning.patch
+        else
+           echo  "Error while applying Update Capsule Conformance Test patch to treat EFI_UNSUPPORTED as Warning..."
+           exit
+        fi
     fi
 
     # Apply BBSR patch for Systemready
