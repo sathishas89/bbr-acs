@@ -2,7 +2,7 @@ diff --git a/uefi-sct/SctPkg/CommonGenFramework.sh b/uefi-sct/SctPkg/CommonGenFr
 index c42e8904..28c3a438 100755
 --- a/uefi-sct/SctPkg/CommonGenFramework.sh
 +++ b/uefi-sct/SctPkg/CommonGenFramework.sh
-@@ -411,6 +411,15 @@ then
+@@ -411,6 +411,16 @@ then
      cp $ProcessorType/ImageServicesBBTest.efi                  $Framework/Test/ > NUL
      cp $ProcessorType/MiscBootServicesBBTest.efi               $Framework/Test/ > NUL
  
@@ -12,6 +12,7 @@ index c42e8904..28c3a438 100755
 +    cp $ProcessorType/TCG2ProtocolBBTest.efi                   $Framework/Test/ > NUL
 +  if [ $SECUREBOOT_ENABLE -eq 1 ]; then
 +    cp $ProcessorType/SecureBootBBTest.efi                     $Framework/Test/ > NUL
++    cp $ProcessorType/SecureBootAuthVariablePersistenceTest.efi $Framework/Test/ > NUL
 +  fi
 +    cp $ProcessorType/PlatformResetAttackMitigationPsciTest.efi $Framework/Test/ > NUL
 +
@@ -30,7 +31,7 @@ diff --git a/uefi-sct/SctPkg/Config/Data/Category.ini b/uefi-sct/SctPkg/Config/D
 index d70c18c5..9228dc0f 100644
 --- a/uefi-sct/SctPkg/Config/Data/Category.ini
 +++ b/uefi-sct/SctPkg/Config/Data/Category.ini
-@@ -1081,3 +1081,17 @@ CategoryGuid  = 14BC21EC-6D04-4684-A892-1B465ACAC423
+@@ -1081,3 +1081,24 @@ CategoryGuid  = 14BC21EC-6D04-4684-A892-1B465ACAC423
  InterfaceGuid = 71652D04-BF38-434A-BCB8-6547D7FD8384
  Name          = GenericTest\EFICompliantTest\EfiEbbrProfileTableTest
  Description   = Efi EBBR Profile Table Test
@@ -41,6 +42,13 @@ index d70c18c5..9228dc0f 100644
 +InterfaceGuid = AFF115FB-387B-4C18-8C41-6AFC7F03BB90
 +Name          = RuntimeServicesTest\BBSRVariableSizeTest
 +Description   =
++
++[Category Data]
++Revision      = 0x00010000
++CategoryGuid  = 9ADFC05F-CEBE-496A-9C8A-D746DD0DBFD0
++InterfaceGuid = AFF115FB-387B-4C18-8C41-6AFC7F03BB90
++Name          = RuntimeServicesTest\SecureBootTest\SecureBootAuthVariablePersistenceTest
++Description   = Verify that Secure Boot authenticated variables persist across reset
 +
 +[Category Data]
 +Revision      = 0x00010000

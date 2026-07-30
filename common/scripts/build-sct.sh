@@ -105,6 +105,8 @@ if [[ $BUILD_TYPE = S ]]; then
     secureboot_bbtest="$secureboot_dir/BlackBoxTest/SecureBootBBTest.inf"
     bbsr_vs_dir="$runtime_services/BBSRVariableSizeTest"
     bbsr_vs_bbtest="$bbsr_vs_dir/BlackBoxTest/BBSRVariableSizeBBTest.inf"
+    auth_var_dir="$runtime_services/AuthVariablePersistenceTest/BlackBoxTest"
+    auth_var_bbtest="$auth_var_dir/SecureBootAuthVariablePersistenceBBTest.inf"
     pram_dir="$generic_dir/PlatformResetAttackMitigationPsciTest"
     pram_bbtest_dir="$pram_dir/BlackBoxTest"
     pram_bbtest="$pram_bbtest_dir/PlatformResetAttackMitigationPsciBBTest.inf"
@@ -113,6 +115,7 @@ if [[ $BUILD_TYPE = S ]]; then
 
     sed -i "s|$secureboot_bbtest|#$secureboot_bbtest|g" "$BBR_SCT_DSC"
     sed -i "s|$bbsr_vs_bbtest|#$bbsr_vs_bbtest|g" "$BBR_SCT_DSC"
+    sed -i "s|$auth_var_bbtest|#$auth_var_bbtest|g" "$BBR_SCT_DSC"
     sed -i "s|$pram_bbtest|#$pram_bbtest|g" "$BBR_SCT_DSC"
     sed -i "s|$secureboot_images|#$secureboot_images|g" "$BBR_SCT_DSC"
 
@@ -186,6 +189,8 @@ do_build()
         sctpkg_runtime_dir="$sctpkg_efi_dir/RuntimeServices"
         cp -r "$BBSR_TEST_DIR/BBSRVariableSizeTest" \
             "$sctpkg_runtime_dir"
+        cp -r "$BBSR_TEST_DIR/AuthVariablePersistenceTest" \
+            "$sctpkg_runtime_dir/"
         cp -r "$BBSR_TEST_DIR/PlatformResetAttackMitigationPsciTest" \
             "$generic_test_dir/"
     fi
@@ -350,6 +355,18 @@ check-to-warning.patch"
 
     pushd uefi-sct
     if [[ $BUILD_TYPE != S ]]; then
+        auth_var_images_dir="$runtime_services/AuthVariablePersistenceTest"
+        auth_var_images_dir="$auth_var_images_dir/BlackBoxTest/Dependency"
+        auth_var_images_dir="$auth_var_images_dir/Images"
+        auth_var_images_name="SecureBootAuthVariablePersistenceImages.inf"
+        auth_var_images="$auth_var_images_dir/$auth_var_images_name"
+        build -p SctPkg/UEFI/BBR_SCT.dsc \
+            -m "$auth_var_images" \
+            -D ENABLE_SECUREBOOT_TESTS=TRUE \
+            -a "$TARGET_ARCH" \
+            -t "$UEFI_TOOLCHAIN" \
+            -b "$UEFI_BUILD_MODE" \
+            -n "$PARALLELISM"
         ./SctPkg/build_bbr.sh "$TARGET_ARCH" GCC "$UEFI_BUILD_MODE" \
             ENABLE_SECUREBOOT_TESTS -n "$PARALLELISM"
     else
