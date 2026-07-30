@@ -18,7 +18,7 @@ Refer to [UEFI SCT Test Case Specification](https://uefi-sct-testcasespec.readth
 <th rowspan=1 colspan=1>Testcase</th>
 </tr>
 <tr>
-<td rowspan=32 colspan=1>🔲 RuntimeServicesTest</td>
+<td rowspan=33 colspan=1>🔲 RuntimeServicesTest</td>
 <td rowspan=3 colspan=1>✅ SecureBootTest</td>
 <td rowspan=1 colspan=1>✅ ImageLoading</td>
 </tr>
@@ -66,6 +66,10 @@ Refer to [UEFI SCT Test Case Specification](https://uefi-sct-testcasespec.readth
 </tr>
 <td rowspan=1 colspan=1>✅ BBSRVariableSizeTest<sup>[arm]</sup></td>
 <td rowspan=1 colspan=1>✅ BBSRVariableSizeTest_func<sup>[arm]</sup></td>
+<tr>
+<td rowspan=1 colspan=1>✅ SecureBootAuthVariablePersistenceTest<sup>[arm]</sup></td>
+<td rowspan=1 colspan=1>✅ SecureBootAuthVariablePersistenceTest_func<sup>[arm]</sup></td>
+</tr>
 <tr>
 <td rowspan=1 colspan=1>✅ TCGMemoryOverwriteRequestTest</td>
 <td rowspan=1 colspan=1>✅ Test MOR and MORLOCK</td>
