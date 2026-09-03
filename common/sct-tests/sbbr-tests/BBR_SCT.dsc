@@ -271,6 +271,7 @@ SctPkg/TestCase/UEFI/EFI/Protocol/TCG2/BlackBoxTest/TCG2ProtocolBBTest.inf
 SctPkg/TestCase/UEFI/EFI/Generic/PlatformResetAttackMitigationPsciTest/BlackBoxTest/PlatformResetAttackMitigationPsciBBTest.inf
 !if $(ENABLE_SECUREBOOT_TESTS) == TRUE
 SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf
+SctPkg/TestCase/UEFI/EFI/RuntimeServices/AuthVariablePersistenceTest/BlackBoxTest/SecureBootAuthVariablePersistenceBBTest.inf
 !endif
 
 SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf
@@ -428,6 +429,7 @@ SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Imag
 SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/SampleAppForSecureBootTest2/SampleAppForSecureBootTest2.inf
 SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/SampleAppForSecureBootTest3/SampleAppForSecureBootTest3.inf
 SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/SecureBootImages.inf
+SctPkg/TestCase/UEFI/EFI/RuntimeServices/AuthVariablePersistenceTest/BlackBoxTest/Dependency/Images/SecureBootAuthVariablePersistenceImages.inf
 !endif
 
 #
