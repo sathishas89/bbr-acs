@@ -535,8 +535,8 @@ RecordPreResetFailureAndCleanup (
 }
 
 /**
-  Creates the unique authenticated variable, verifies authentication
-  enforcement, prepares SCT recovery, and resets the system.
+  Creates the unique authenticated variable, prepares SCT recovery, and
+  resets the system.
 
   @param RT           A pointer to the EFI Runtime Services table.
   @param StandardLib  A pointer to the Standard Test Library protocol.
@@ -629,34 +629,6 @@ CreateAuthenticatedTestVariableAndReset (
              );
   }
 
-  Status = RT->SetVariable (
-                 SECURE_BOOT_AUTH_VARIABLE_NAME,
-                 &mSecureBootAuthVariableGuid,
-                 SECURE_BOOT_AUTH_VARIABLE_ATTRIBUTES,
-                 sizeof (mUnauthenticatedPayload) - 1,
-                 (VOID *)mUnauthenticatedPayload
-                 );
-  if (Status != EFI_SECURITY_VIOLATION) {
-    StandardLib->RecordMessage (
-                   StandardLib,
-                   EFI_VERBOSE_LEVEL_DEFAULT,
-                   L"Unauthenticated update returned %r instead of EFI_SECURITY_VIOLATION.",
-                   Status
-                   );
-    return RecordPreResetFailureAndCleanup (
-             RT,
-             StandardLib,
-             L"An unauthenticated update was not rejected as required.",
-             (UINTN)__LINE__
-             );
-  }
-
-  StandardLib->RecordMessage (
-                 StandardLib,
-                 EFI_VERBOSE_LEVEL_DEFAULT,
-                 L"Unauthenticated update was rejected with EFI_SECURITY_VIOLATION."
-                 );
-
   ResetMarker = VERIFY_AFTER_RESET_MARKER;
   Status = RecoveryLib->WriteResetRecord (
                           RecoveryLib,
@@ -703,8 +675,9 @@ CreateAuthenticatedTestVariableAndReset (
 }
 
 /**
-  Verifies that the authenticated variable is present after reset, logs its
-  data, and deletes it with the required authenticated request.
+  Verifies that the authenticated variable is present after reset, checks
+  that an unauthenticated update is rejected, and then deletes the variable
+  with the required authenticated request.
 
   @param RT           A pointer to the EFI Runtime Services table.
   @param StandardLib  A pointer to the Standard Test Library protocol.
@@ -767,6 +740,33 @@ VerifyAuthenticatedTestVariableAfterReset (
     gtBS->FreePool (VariableData);
   }
 
+  if (!EFI_ERROR (Status) && VariablePresent) {
+    Status = RT->SetVariable (
+                   SECURE_BOOT_AUTH_VARIABLE_NAME,
+                   &mSecureBootAuthVariableGuid,
+                   SECURE_BOOT_AUTH_VARIABLE_ATTRIBUTES,
+                   sizeof (mUnauthenticatedPayload) - 1,
+                   (VOID *)mUnauthenticatedPayload
+                   );
+    if (Status != EFI_SECURITY_VIOLATION) {
+      StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"Post-reset unauthenticated update returned %r instead "
+                     L"of EFI_SECURITY_VIOLATION.",
+                     Status
+                     );
+      Result = EFI_TEST_ASSERTION_FAILED;
+    } else {
+      StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"Post-reset unauthenticated update was rejected with "
+                     L"EFI_SECURITY_VIOLATION."
+                     );
+    }
+  }
+
   DeleteStatus = DeleteOwnedTestVariable (
                    RT,
                    StandardLib,
@@ -781,7 +781,8 @@ VerifyAuthenticatedTestVariableAfterReset (
     return RecordPersistenceAssertion (
              StandardLib,
              EFI_TEST_ASSERTION_FAILED,
-             L"Persistence verification or authenticated deletion failed.",
+             L"Persistence verification, post-reset authentication "
+             L"enforcement, or authenticated deletion failed.",
              (UINTN)__LINE__
              );
   }
@@ -789,7 +790,8 @@ VerifyAuthenticatedTestVariableAfterReset (
   return RecordPersistenceAssertion (
            StandardLib,
            EFI_TEST_ASSERTION_PASSED,
-           L"The authenticated variable persisted and was deleted.",
+           L"The authenticated variable persisted, rejected an "
+           L"unauthenticated update after reset, and was deleted.",
            (UINTN)__LINE__
            );
 }
@@ -799,7 +801,8 @@ VerifyAuthenticatedTestVariableAfterReset (
 
   On the first invocation the test creates and validates its own authenticated
   variable and resets. On recovery it verifies that the variable exists, logs
-  its data, and performs an authenticated deletion.
+  its data, verifies that an unauthenticated update is rejected, and performs
+  an authenticated deletion.
 
   @param This             A pointer to the EFI_BB_TEST_PROTOCOL instance.
   @param ClientInterface  A pointer to the EFI Runtime Services interface.
